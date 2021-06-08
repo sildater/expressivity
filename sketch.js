@@ -56,8 +56,10 @@ function setup() {
 
 function draw() {
   background(default_settings.background);
-  
-  
+  push();
+  fill(20);
+  circle(default_settings.height/2+400,default_settings.height/2, default_settings.height )
+  pop();
   for (var key in pile_objects) {
     pile_objects[key].display();
     }
