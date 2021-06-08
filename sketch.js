@@ -11,27 +11,32 @@ let pile_lines = [];
 let term_lines = [];
 let clicked_objects = [];
 let term_strings = [];
+let term_string = "";
 
 let default_settings;
 
 function preload() {
-  term_table = loadTable("data/term_data.csv", 'csv', 'header');
-  perf_table = loadTable("data/perf_data.csv", 'csv', 'header');
-  pile_table = loadTable("data/pile_data.csv", 'csv', 'header');
+  term_table = loadTable("data/term_data1.csv", 'csv', 'header');
+  perf_table = loadTable("data/perf_data1.csv", 'csv', 'header');
+  pile_table = loadTable("data/pile_data1.csv", 'csv', 'header');
 }
 
 function setup() {
   default_settings = {
-    perf_line:color(20,140),
-    perf_background:color(20, 50),
+    perf_line:color(120,140),
+    perf_background:color(200,50),
     //pile_line:color(183, 172, 68, 230),
     //term_line: color(255,170,0,230),
-    background: color(255,255,255,255),
+    background: color(0),
     
     group1_from:color(23, 244, 120, 100),
     group1_to:color(23, 23, 244, 100),
     group2_from:color(218, 0, 32, 150),
     group2_to:color(72, 218, 9, 150),
+
+    text_normal:color(220,160),
+    text_normal_p:color(210,235),
+    text_highlight:color(220,255),
   
     height:800,
     width:1500,
@@ -52,15 +57,14 @@ function setup() {
 function draw() {
   background(default_settings.background);
   
-  for (var key in term_objects) {
-    term_objects[key].display();
-    }
+  
   for (var key in pile_objects) {
     pile_objects[key].display();
     }
   for (var key in perf_objects) {
     perf_objects[key].display();
     }
+
   for (var key in pile_lines) {
     pile_lines[key].display();
       }
@@ -71,9 +75,20 @@ function draw() {
     term_lines[key].display();
       }
 
+  for (var key in term_objects) {
+    term_objects[key].display();
+    }
+  for (var key in term_objects) {
+    term_objects[key].display_text();
+    }
+
+
   push();
-  textSize(10);
   
+  fill(default_settings.text_highlight);
+  textSize(12);  
+  text(term_string, 230, default_settings.height/2-(term_strings.length/2)*12);
+  textSize(10);
   for (var key in term_strings) {
     text(term_strings[key], 230, default_settings.height/2-(term_strings.length/2-1)*12+key*12, default_settings.height*4, default_settings.height/4);
       }
@@ -164,6 +179,7 @@ function create_perf_lines_from_perf(term_idx, perf_id){
 }
 
 function create_term_lines_from_term(term_id_orig, term_idx, col){
+  console.log("create term lines", term_id_orig, term_idx);
   term_lines= term_lines.concat(term_idx.map((term_id)=>{ term_objects[term_id].clicked = true;
     return new Connection(term_objects[term_id_orig].x,
                           term_objects[term_id_orig].y,
@@ -179,18 +195,18 @@ function create_term_lines_from_term(term_id_orig, term_idx, col){
 
 
 class Connection {
-  constructor(x1,y1, x2,y2,color) {
+  constructor(x1,y1, x2,y2,colorinput) {
     this.x1 = x1;
     this.y1 = y1; 
     this.x2 = x2;
     this.y2 = y2;
-    this.color = color;
+    this.color = color(...colorinput.levels.slice(0,3), 255);;
   }
   display () {
     push();
     fill(this.color);
     stroke(this.color);
-    strokeWeight(1.5);
+    strokeWeight(2);
     line(this.x1, this.y1, this.x2, this.y2);
     pop();
   }
@@ -205,13 +221,13 @@ class Term {
   constructor(x,y,name, id, id_pile1, id_pile2, name_pile1, name_pile2, neighbors1, neighbors2, performances) {
     this.x = x*default_settings.height/2 + default_settings.height/2 + 400;
     this.y = y*default_settings.height/2 +default_settings.height/2;
-    this.name = name.replace("_", " ");
+    this.name = name.split("_").join(" ");
     this.id = id;
     this.id_pile1 = id_pile1;
     this.id_pile2 = id_pile2;
     this.ids_pile = [id_pile1, id_pile2];
-    this.name_pile1 = name_pile1.replace("_", " ");
-    this.name_pile2 = name_pile2.replace("_", " ");
+    this.name_pile1 = name_pile1.split("_").join(" ");
+    this.name_pile2 = name_pile2.split("_").join(" ");
     this.neighbors1 = neighbors1;
     this.neighbors2 = neighbors2;
     this.perf_idx = performances;
@@ -222,13 +238,11 @@ class Term {
     let diameter = 20;
     let bcolor1 = pile_objects[this.id_pile1].color;
     let bcolor2 = pile_objects[this.id_pile2].color;
-    let fontsize = default_settings.font_size;
     if (this.clicked) {
       diameter = 34;
-      bcolor1 = color(...bcolor1.levels.slice(0,3), 125);
-      bcolor2 = color(...bcolor2.levels.slice(0,3), 165);
-      fontsize = fontsize + 2;
-      term_strings.push(this.name.concat(" (pile 1: ", this.name_pile1, ", pile 2: ", this.name_pile2, ")"));
+      bcolor1 = color(...bcolor1.levels.slice(0,3), 255);
+      bcolor2 = color(...bcolor2.levels.slice(0,3), 255);
+
     }
     push();
     //stroke(pile_objects[this.id_pile1].color);
@@ -241,12 +255,37 @@ class Term {
     circle(this.x, this.y, diameter/2);
     pop();
 
-    //stroke(color(0));
+
+  }
+
+  display_text() {
     push();
+    let fontsize = default_settings.font_size;
+    let text_color = default_settings.text_normal;
+    let text_string = this.name;
+    noStroke();
+    
+    if (this.clicked) {
+      fontsize = fontsize + 2;
+      text_color = default_settings.text_highlight;//color(255,255);//
+      text_string = text_string.toUpperCase();
+      strokeWeight(2);
+      stroke(40);
+      term_strings.push(this.name.concat(" --- (pile 1: ", this.name_pile1, ", pile 2: ", this.name_pile2, ")"));
+    }
+    
+
+
+    //stroke(color(0));
+    
     textSize(fontsize);
-    text(this.name, this.x, this.y);
+    fill(text_color);
+    
+    
+    text(text_string, this.x, this.y);
     pop();
   }
+
 
   tryclick() {
     this.clicked = false;
@@ -254,6 +293,7 @@ class Term {
   
      clicked_objects.push(this);
      this.clicked = true;
+     term_string = "Clicked term: ".concat(this.name," (pile 1: ", this.name_pile1, ", pile 2: ", this.name_pile2, ")");
     }
   }
   click() {
@@ -278,7 +318,7 @@ class Term {
 class Pile {
   constructor(name, id, group, within_group_id, term_idx) {
 
-    this.name = name.replace("_", " ");
+    this.name = name.split("_").join(" ");
     this.id = id;
     this.group = group;
     this.within_group_id = within_group_id;
@@ -323,10 +363,12 @@ class Pile {
     let x_extra = 0;
     let bcolor = this.color;
     let font_size = default_settings.font_size;
+    let text_color = default_settings.text_normal_p;
     if (this.clicked) {
       x_extra = 10;
-      bcolor = color(...bcolor.levels.slice(0,3), 225);
+      bcolor = color(...this.color.levels.slice(0,3), 225);
       font_size = default_settings.font_size + 2;;
+      text_color = default_settings.text_highlight;
     }
 
     push();
@@ -336,6 +378,7 @@ class Pile {
 
     push();
     textSize(font_size);
+    fill(text_color);
     text(this.name, this.x+50, this.y+0.8*this.yl);
     pop();
   
@@ -401,10 +444,12 @@ class Performance {
     let x_extra = 0;
     let bcolor = this.color;
     let font_size = default_settings.font_size;
+    let text_color = default_settings.text_normal_p;
     if (this.clicked) {
       x_extra = 10;
-      bcolor = color(...bcolor.levels.slice(0,3), 115);
+      bcolor = color(...bcolor.levels.slice(0,3), 100);
       font_size = default_settings.font_size + 2;;
+      text_color = default_settings.text_highlight;
     }
 
 
@@ -415,6 +460,7 @@ class Performance {
 
     push();
     textSize(font_size);
+    fill(text_color);
     text(this.name, this.x+50, this.y+0.8*this.yl);
     pop();
   }
@@ -456,6 +502,7 @@ function checkclick() {
     term_lines = [];
     clicked_objects = [];
     term_strings = [];
+    term_string = "";
     for(var i = 0; i < piles_array.length; i++){
       piles_array[i].tryclick();
     }
