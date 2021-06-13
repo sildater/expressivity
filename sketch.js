@@ -57,7 +57,7 @@ function setup() {
 function draw() {
   background(default_settings.background);
   push();
-  fill(20);
+  fill(10);
   circle(default_settings.height/2+400,default_settings.height/2, default_settings.height )
   pop();
   for (var key in pile_objects) {
@@ -208,7 +208,7 @@ class Connection {
     push();
     fill(this.color);
     stroke(this.color);
-    strokeWeight(2);
+    strokeWeight(1.5);
     line(this.x1, this.y1, this.x2, this.y2);
     pop();
   }
