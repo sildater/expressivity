@@ -45,9 +45,22 @@ function setup() {
   };
   default_settings.width = max(1450, windowWidth);
   let max_height = default_settings.width - 900;
-  default_settings.height = min(max(800, windowHeight),max_height);
+  default_settings.height = min(max(800, windowHeight -20 ),max_height);
   default_settings.font_size = default_settings.height /45 /5 *3;
+
+  textFont('Helvetica');
+  
+  //select('#text_container').style("left", ((default_settings.height+900)/2).toString()+"px");
+  select('#text_container').style("top", (default_settings.height+50).toString()+"px");
+  if ((default_settings.height+900)/2 > 1450/2) {
+    select('#canvas_container').style("margin-left", "-"+((default_settings.height+900)/2).toString()+"px");
+  } else {
+    select('#canvas_container').style("margin-left", "-"+(windowWidth/2).toString()+"px");
+  }
+  
+
   let canvas = createCanvas(default_settings.width, default_settings.height );
+  canvas.parent("canvas_container")
   canvas.mousePressed(checkclick);
   create_objects();
   noLoop();
@@ -89,11 +102,17 @@ function draw() {
   
   fill(default_settings.text_highlight);
   textSize(12);  
-  text(term_string, 230, default_settings.height/2-(term_strings.length/2)*12);
+  if (term_strings.length > 0){
+    text("Currently highlighted terms:", 230, default_settings.height/2-(term_strings.length/2-1)*12-15*2);
+  }
+  text(term_string, 230, default_settings.height/2-(term_strings.length/2-1)*12-15);
+  console.log(-(term_strings.length/2)*12)
   textSize(10);
   for (var key in term_strings) {
-    text(term_strings[key], 230, default_settings.height/2-(term_strings.length/2-1)*12+key*12, default_settings.height*4, default_settings.height/4);
-      }
+    text(term_strings[key], 230, default_settings.height/2-(term_strings.length/2-1)*12+key*12);
+      
+      console.log(-(term_strings.length/2 - 1)*12+key*12);
+    }
   
   pop();
 }
@@ -327,7 +346,7 @@ class Pile {
     this.term_idx = term_idx;
 
     this.x = 10;
-    this.yl = default_settings.height /44;
+    this.yl = default_settings.height /45;
     this.y = this.compute_y();
     this.xl = 200;
     this.x_conn = 220;
@@ -342,7 +361,7 @@ class Pile {
     let offset = 0;
     
     if (this.group == 2) {
-      offset = this.yl * 25;
+      offset = this.yl * 26;
     }
     let y = (this.within_group_id) * this.yl + offset;
     return y
@@ -414,9 +433,9 @@ class Pile {
 
 class Performance {
   constructor(name, music_id, within_id,term_idx) {
-    let namesplit = name.split("_");
-    namesplit = namesplit.map((word)=>{return word.charAt(0).toUpperCase()+word.slice(1,word.length);})
-    this.name = namesplit.join(" ");
+    //let namesplit = name.split("_");
+    //namesplit = namesplit.map((word)=>{return word.charAt(0).toUpperCase()+word.slice(1,word.length);})
+    this.name = this.format_name(name)// namesplit.join(" ");
     this.music_id = music_id;
     this.within_id = within_id;
     this.term_idx = term_idx;
@@ -433,6 +452,35 @@ class Performance {
     
     
 
+  }
+
+  format_name (name) {
+    let replace_strings = {
+      "Bach": "J.S.Bach BWV 846 Prelude",
+      "Beethoven": "Beethoven Op. 27 No. 2 1st mvt",
+      "Brahms": "Brahms Op. 119 No. 2",
+      "Liszt": "Liszt S. 216a",
+      "Arabeske": "R. Schumann Op. 18",
+      "Kreisleriana": "R. Schumann Op. 16 No. 3",
+      "Mozart": "Mozart K. 545 2nd mvt",
+      "Excerpt1": "(1)",
+      "Excerpt2": "(2)"
+    }
+    let namesplit = name.split("_");
+    namesplit = namesplit.map((word)=>{return word.charAt(0).toUpperCase()+word.slice(1,word.length);})
+    console.log(namesplit);
+    namesplit = namesplit.filter(word=>word.indexOf("Schumann") < 0 );
+    console.log(namesplit);
+    namesplit = namesplit.map((word)=>{
+      if (replace_strings.hasOwnProperty(word)) {
+        return replace_strings[word]
+      }
+      else {
+        return word
+      }
+    }
+    );
+    return namesplit.join(" ");
   }
 
   compute_y () {

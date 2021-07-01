@@ -6,7 +6,92 @@
 
   </head>
   <body>
-    <script src="sketch.js"></script>
+    <div id="canvas_container">
+      <script src="sketch.js"></script>
+    </div>
+    
   
+
+ <div id="text_container">
+
+
+   
+   <h2 class="titles" >Visualizing Musical Expression</h2>
+   <p> Welcome to this interactive visualization of two experiments in preceived musical expression that were performed in the context for the <em>Con Espressione</em> project!
+   </p>
+   <p>In the first experiment listeners were asked to describe the expressive performance of several pieces in free text.
+    In the second experiment, two groups of music experts were asked to sort the 150 most common descriptors of the first experiment into sets ("piles") of similar terms.
+ </p>
+   <p>This visualization shows a part the results of these experiments.
+    In the right column you see the performances used in the first experiment.
+    In the center you see a two-dimensional representation of the 150 most important terms.
+    In the left column you see two lists of piles as created and named by the two groups of experts.
+    There are three ways to interact with this visualization: <br>
+    <br>
+    (1) Click on a performance to see the terms used by listeners to describe this performance.
+    Every term is in turn connected to the two piles it was sorted into.<br>
+    (2) Click on a pile to see only the terms that were sorted into it.
+    Every term is in turn connected to all the performance it was used for.<br>
+    (3) Click on a term to see both piles it was sorted into as well as all performances it was used for.
+    All terms that were were sorted into the same two piles are connected too.
+  
+  </p>
+   <p>
+    For more details on the experiments and the creation and analysis of this data, please see the publications below.
+    The datasets (including many modalities not used in this visualization) are available for further research too.
+   </p>
+  
+   
+   
+
+
+   <h2 class="titles">Publications</h2>
+
+
+   <p> Cancino-Chacón, C., Peter, S., Chowdhury, S., Aljanaki, A., and Widmer, G.:<br>
+    <a href="https://doi.org/10.5281/zenodo.3968828">Sorting Musical Expression:  
+      Characterization ofDescriptions of Expressive Piano Performances</a><br>
+    In Proceedings of the International Conference on Music Perception and Cognition, 2021
+   </p>
+
+    <p>Cancino-Chacón, C., Peter, S., Chowdhury, S., Aljanaki, A., and Widmer, G.:<br>
+    <a href="https://arxiv.org/abs/2008.02194">On the Characterization of Expressive Performance 
+      in Classical Music: First Results of theCon Espressione Game </a><br>
+      In Proceedings of the International Society for Music Information Retrieval Conference, 2020
+   </p>
+
+    <h2 class="titles">Data and Repositories</h2>
+
+   <p> The Con Espressione Game Dataset can be obtained here:<br>
+    <a href="https://doi.org/10.5281/zenodo.3968828">Con Espressione Dataset</a>
+   </p>
+ 
+   <p> The code for the ISMIR 2020 publication can be found here:<br>
+    <a href="">Github ISMIR 2020</a>
+   </p>
+
+   <p> The code for the ICMPC 2021 publication can be found here:<br>
+    <a href="">Github ICMPC 2021</a>
+   </p>
+
+
+
+
+    <h2 class="titles">Acknowledgments</h2> 
+
+
+
+
+
+  <p> This project has received funding from the European Research Council (ERC) under the European Union's Horizon 2020 research and innovation programme (grant agreement No. 670035).
+    This work was presented as a <a target="_blank" rel="noopener noreferrer" href="http://smc2019.uma.es/articles/D1/D1_05_SMC2019_paper.pdf">demo</a>
+    at the 16th Sound and Music Computing Conference (<a target="_blank" rel="noopener noreferrer" href="http://smc2019.uma.es/">SMC</a>) 2019.
+    </p>
+
+  <p>We gratefully acknowledge the effort invested by our music expert, Hans Georg Nicklaus (Anton Bruckner Private University of Music, Linz) for helping with the selection of the different performances in the dataset. 
+    We thank Olivier Lartillot for sharing the Matlab code to compute the loudness features.
+  </p>
+     <img src="data/LOGO_ERC-FLAG_EU NEGATIF.jpg" alt="ERC LOGO" style="width:400px;">
+ </div>
 
 </body></html>
