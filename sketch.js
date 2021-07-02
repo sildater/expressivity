@@ -53,9 +53,9 @@ function setup() {
   //select('#text_container').style("left", ((default_settings.height+900)/2).toString()+"px");
   select('#text_container').style("top", (default_settings.height+50).toString()+"px");
   if ((default_settings.height+900)/2 > 1450/2) {
-    select('#canvas_container').style("margin-left", "-"+((default_settings.height+900)/2).toString()+"px");
+    select('#canvas_container').style("margin-left", "-"+((default_settings.height+900)/2-10).toString()+"px");
   } else {
-    select('#canvas_container').style("margin-left", "-"+(windowWidth/2).toString()+"px");
+    select('#canvas_container').style("margin-left", "-"+(windowWidth/2-10).toString()+"px");
   }
   
 
@@ -69,9 +69,19 @@ function setup() {
 
 function draw() {
   background(default_settings.background);
+
   push();
-  fill(10);
-  circle(default_settings.height/2+400,default_settings.height/2, default_settings.height )
+  stroke(default_settings.perf_line)
+  strokeWeight(2)
+  line(1,1,1, default_settings.height-1);
+  line(default_settings.height-1+900,1,default_settings.height-1+900, default_settings.height-1);
+  line(1,1,default_settings.height-1+900, 1);
+  line(1, default_settings.height-1,default_settings.height-1+900, default_settings.height-1);
+  pop();
+
+  push();
+  fill(20);
+  circle(default_settings.height/2+400,default_settings.height/2, default_settings.height-4 )
   pop();
   for (var key in pile_objects) {
     pile_objects[key].display();
@@ -116,9 +126,7 @@ function draw() {
   
   pop();
 
-  push();
-  line(0,wi)
-  pop();
+
 }
 
 
