@@ -115,6 +115,10 @@ function draw() {
     }
   
   pop();
+
+  push();
+  line(0,wi)
+  pop();
 }
 
 
